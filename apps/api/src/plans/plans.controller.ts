@@ -36,19 +36,13 @@ export class PlansController {
   @Get(':id')
   @ApiOperation({ summary: 'Get plan by ID' })
   @ApiParam({ name: 'id', type: 'string' })
-  findOne(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  findOne(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.plansService.findOne(user.organizationId, id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new plan' })
-  create(
-    @CurrentUser() user: JwtPayload,
-    @Body() dto: CreatePlanDto,
-  ) {
+  create(@CurrentUser() user: JwtPayload, @Body() dto: CreatePlanDto) {
     return this.plansService.create(user.organizationId, dto);
   }
 
@@ -66,10 +60,7 @@ export class PlansController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a plan (blocks if active subscriptions)' })
   @ApiParam({ name: 'id', type: 'string' })
-  remove(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  remove(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.plansService.remove(user.organizationId, id);
   }
 }

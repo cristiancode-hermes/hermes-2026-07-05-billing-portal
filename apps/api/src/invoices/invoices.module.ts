@@ -10,7 +10,13 @@ import { Settings } from '../entities/settings.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Invoice, InvoiceItem, Payment, Customer, Settings]),
+    TypeOrmModule.forFeature([
+      Invoice,
+      InvoiceItem,
+      Payment,
+      Customer,
+      Settings,
+    ]),
   ],
   controllers: [InvoicesController],
   providers: [InvoicesService],

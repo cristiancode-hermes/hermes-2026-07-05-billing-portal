@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -13,7 +6,10 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { SubscriptionsService } from './subscriptions.service';
-import { CreateSubscriptionDto, ChangePlanDto } from './dto/create-subscription.dto';
+import {
+  CreateSubscriptionDto,
+  ChangePlanDto,
+} from './dto/create-subscription.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/decorators/current-user.decorator';
@@ -34,39 +30,29 @@ export class SubscriptionsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get subscription by ID' })
   @ApiParam({ name: 'id', type: 'string' })
-  findOne(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  findOne(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.subscriptionsService.findOne(user.organizationId, id);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a subscription (auto-generates first invoice)' })
-  create(
-    @CurrentUser() user: JwtPayload,
-    @Body() dto: CreateSubscriptionDto,
-  ) {
+  @ApiOperation({
+    summary: 'Create a subscription (auto-generates first invoice)',
+  })
+  create(@CurrentUser() user: JwtPayload, @Body() dto: CreateSubscriptionDto) {
     return this.subscriptionsService.create(user.organizationId, dto);
   }
 
   @Post(':id/cancel')
   @ApiOperation({ summary: 'Cancel a subscription' })
   @ApiParam({ name: 'id', type: 'string' })
-  cancel(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  cancel(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.subscriptionsService.cancel(user.organizationId, id);
   }
 
   @Post(':id/reactivate')
   @ApiOperation({ summary: 'Reactivate a cancelled subscription' })
   @ApiParam({ name: 'id', type: 'string' })
-  reactivate(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  reactivate(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.subscriptionsService.reactivate(user.organizationId, id);
   }
 

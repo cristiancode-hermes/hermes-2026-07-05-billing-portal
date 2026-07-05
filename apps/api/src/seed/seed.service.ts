@@ -47,7 +47,10 @@ export class SeedService implements OnModuleInit {
     this.logger.log('Seeding database with demo data...');
 
     // 1. Create Organization
-    const org = this.orgRepository.create({ name: 'Acme SaaS', email: 'admin@acme.com' });
+    const org = this.orgRepository.create({
+      name: 'Acme SaaS',
+      email: 'admin@acme.com',
+    });
     const savedOrg = await this.orgRepository.save(org);
 
     // 2. Create Users
@@ -75,7 +78,14 @@ export class SeedService implements OnModuleInit {
       description: 'Basic plan with core features for small teams',
       price: 29,
       cycle: 'monthly',
-      features: { features: ['Up to 5 users', 'Basic analytics', 'Email support', '1GB storage'] },
+      features: {
+        features: [
+          'Up to 5 users',
+          'Basic analytics',
+          'Email support',
+          '1GB storage',
+        ],
+      },
       isActive: true,
     });
     const proPlan = this.planRepository.create({
@@ -84,7 +94,16 @@ export class SeedService implements OnModuleInit {
       description: 'Professional plan for growing businesses',
       price: 99,
       cycle: 'monthly',
-      features: { features: ['Up to 25 users', 'Advanced analytics', 'Priority support', '10GB storage', 'API access', 'Custom integrations'] },
+      features: {
+        features: [
+          'Up to 25 users',
+          'Advanced analytics',
+          'Priority support',
+          '10GB storage',
+          'API access',
+          'Custom integrations',
+        ],
+      },
       isActive: true,
     });
     const enterprisePlan = this.planRepository.create({
@@ -93,18 +112,58 @@ export class SeedService implements OnModuleInit {
       description: 'Enterprise plan with full features and dedicated support',
       price: 299,
       cycle: 'monthly',
-      features: { features: ['Unlimited users', 'Full analytics suite', 'Dedicated support', 'Unlimited storage', 'API access', 'Custom integrations', 'SLA guarantee', 'On-premise option'] },
+      features: {
+        features: [
+          'Unlimited users',
+          'Full analytics suite',
+          'Dedicated support',
+          'Unlimited storage',
+          'API access',
+          'Custom integrations',
+          'SLA guarantee',
+          'On-premise option',
+        ],
+      },
       isActive: true,
     });
-    const savedPlans = await this.planRepository.save([basicPlan, proPlan, enterprisePlan]);
+    const savedPlans = await this.planRepository.save([
+      basicPlan,
+      proPlan,
+      enterprisePlan,
+    ]);
 
     // 4. Create Customers
     const customerInputs = [
-      { name: 'John Smith', email: 'john@example.com', phone: '+1-555-0101', company: 'Tech Corp' },
-      { name: 'Sarah Johnson', email: 'sarah@example.com', phone: '+1-555-0102', company: 'Design Studio' },
-      { name: 'Mike Chen', email: 'mike@example.com', phone: '+1-555-0103', company: 'Chen Consulting' },
-      { name: 'Emily Davis', email: 'emily@example.com', phone: '+1-555-0104', company: 'Davis Enterprises' },
-      { name: 'Alex Wilson', email: 'alex@example.com', phone: '+1-555-0105', company: 'Wilson & Co' },
+      {
+        name: 'John Smith',
+        email: 'john@example.com',
+        phone: '+1-555-0101',
+        company: 'Tech Corp',
+      },
+      {
+        name: 'Sarah Johnson',
+        email: 'sarah@example.com',
+        phone: '+1-555-0102',
+        company: 'Design Studio',
+      },
+      {
+        name: 'Mike Chen',
+        email: 'mike@example.com',
+        phone: '+1-555-0103',
+        company: 'Chen Consulting',
+      },
+      {
+        name: 'Emily Davis',
+        email: 'emily@example.com',
+        phone: '+1-555-0104',
+        company: 'Davis Enterprises',
+      },
+      {
+        name: 'Alex Wilson',
+        email: 'alex@example.com',
+        phone: '+1-555-0105',
+        company: 'Wilson & Co',
+      },
     ];
     const savedCustomers = await this.customerRepository.save(
       customerInputs.map((c) =>
@@ -122,13 +181,40 @@ export class SeedService implements OnModuleInit {
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
     const subInputs = [
-      { customerIdx: 0, planIdx: 1, status: 'active', startDate: threeMonthsAgo },
+      {
+        customerIdx: 0,
+        planIdx: 1,
+        status: 'active',
+        startDate: threeMonthsAgo,
+      },
       { customerIdx: 1, planIdx: 0, status: 'active', startDate: twoMonthsAgo },
-      { customerIdx: 2, planIdx: 2, status: 'active', startDate: threeMonthsAgo },
+      {
+        customerIdx: 2,
+        planIdx: 2,
+        status: 'active',
+        startDate: threeMonthsAgo,
+      },
       { customerIdx: 3, planIdx: 1, status: 'active', startDate: oneMonthAgo },
-      { customerIdx: 0, planIdx: 0, status: 'cancelled', startDate: new Date(today.getTime() - 180 * 86400000), cancelledAt: twoMonthsAgo },
-      { customerIdx: 4, planIdx: 0, status: 'active', startDate: threeMonthsAgo },
-      { customerIdx: 1, planIdx: 1, status: 'cancelled', startDate: new Date(today.getTime() - 150 * 86400000), cancelledAt: oneMonthAgo },
+      {
+        customerIdx: 0,
+        planIdx: 0,
+        status: 'cancelled',
+        startDate: new Date(today.getTime() - 180 * 86400000),
+        cancelledAt: twoMonthsAgo,
+      },
+      {
+        customerIdx: 4,
+        planIdx: 0,
+        status: 'active',
+        startDate: threeMonthsAgo,
+      },
+      {
+        customerIdx: 1,
+        planIdx: 1,
+        status: 'cancelled',
+        startDate: new Date(today.getTime() - 150 * 86400000),
+        cancelledAt: oneMonthAgo,
+      },
       { customerIdx: 2, planIdx: 1, status: 'active', startDate: twoMonthsAgo },
     ];
 
@@ -137,7 +223,7 @@ export class SeedService implements OnModuleInit {
       const customer = savedCustomers[si.customerIdx];
       const plan = savedPlans[si.planIdx];
       const startStr = si.startDate.toISOString().split('T')[0];
-      let endDate = new Date(si.startDate);
+      const endDate = new Date(si.startDate);
       endDate.setMonth(endDate.getMonth() + 1);
       const endStr = endDate.toISOString().split('T')[0];
 
@@ -147,7 +233,10 @@ export class SeedService implements OnModuleInit {
         planId: plan.id,
         status: si.status,
         startDate: startStr,
-        endDate: si.status === 'cancelled' ? (si.cancelledAt || si.startDate).toISOString().split('T')[0] : endStr,
+        endDate:
+          si.status === 'cancelled'
+            ? (si.cancelledAt || si.startDate).toISOString().split('T')[0]
+            : endStr,
         cancelledAt: si.cancelledAt || null,
       });
       const saved = await this.subscriptionRepository.save(sub);
@@ -164,12 +253,36 @@ export class SeedService implements OnModuleInit {
       { customerIdx: 4, subIdx: 5, status: 'paid', daysAgo: 82, amount: 29 },
       { customerIdx: 0, subIdx: 0, status: 'paid', daysAgo: 25, amount: 99 },
       { customerIdx: 1, subIdx: 1, status: 'sent', daysAgo: 10, amount: 29 },
-      { customerIdx: 2, subIdx: 2, status: 'overdue', daysAgo: 45, amount: 299 },
+      {
+        customerIdx: 2,
+        subIdx: 2,
+        status: 'overdue',
+        daysAgo: 45,
+        amount: 299,
+      },
       { customerIdx: 3, subIdx: 3, status: 'draft', daysAgo: 5, amount: 99 },
       { customerIdx: 4, subIdx: 5, status: 'paid', daysAgo: 50, amount: 29 },
-      { customerIdx: 0, subIdx: null, status: 'draft', daysAgo: 2, amount: 150 },
-      { customerIdx: 1, subIdx: null, status: 'cancelled', daysAgo: 30, amount: 50 },
-      { customerIdx: 2, subIdx: null, status: 'overdue', daysAgo: 60, amount: 200 },
+      {
+        customerIdx: 0,
+        subIdx: null,
+        status: 'draft',
+        daysAgo: 2,
+        amount: 150,
+      },
+      {
+        customerIdx: 1,
+        subIdx: null,
+        status: 'cancelled',
+        daysAgo: 30,
+        amount: 50,
+      },
+      {
+        customerIdx: 2,
+        subIdx: null,
+        status: 'overdue',
+        daysAgo: 60,
+        amount: 200,
+      },
     ];
 
     const savedInvoices: Invoice[] = [];
@@ -188,7 +301,8 @@ export class SeedService implements OnModuleInit {
       const invoice = this.invoiceRepository.create({
         organizationId: savedOrg.id,
         customerId: customer.id,
-        subscriptionId: ii.subIdx !== null ? savedSubscriptions[ii.subIdx].id : null,
+        subscriptionId:
+          ii.subIdx !== null ? savedSubscriptions[ii.subIdx].id : null,
         invoiceNumber,
         status: ii.status,
         subtotal: ii.amount,
@@ -196,8 +310,11 @@ export class SeedService implements OnModuleInit {
         total,
         issueDate: invDate.toISOString().split('T')[0],
         dueDate: dueDate.toISOString().split('T')[0],
-        paidAt: ii.status === 'paid' ? new Date(invDate.getTime() + 86400000) : null,
-        sentAt: ['sent', 'paid', 'overdue'].includes(ii.status) ? invDate : null,
+        paidAt:
+          ii.status === 'paid' ? new Date(invDate.getTime() + 86400000) : null,
+        sentAt: ['sent', 'paid', 'overdue'].includes(ii.status)
+          ? invDate
+          : null,
       });
       const savedInvoice = await this.invoiceRepository.save(invoice);
       savedInvoices.push(savedInvoice);
@@ -205,7 +322,10 @@ export class SeedService implements OnModuleInit {
       // Add invoice item
       const item = this.invoiceItemRepository.create({
         invoiceId: savedInvoice.id,
-        description: ii.subIdx !== null ? `Subscription - ${savedSubscriptions[ii.subIdx].id.substring(0, 8)}...` : 'Consulting services',
+        description:
+          ii.subIdx !== null
+            ? `Subscription - ${savedSubscriptions[ii.subIdx].id.substring(0, 8)}...`
+            : 'Consulting services',
         quantity: 1,
         unitPrice: ii.amount,
         total: ii.amount,
@@ -216,8 +336,20 @@ export class SeedService implements OnModuleInit {
 
     // 7. Create Payments (3)
     const paymentInputs = [
-      { invoiceIdx: 0, method: 'transfer', amount: 108.9, ref: 'TRF-001', daysAgo: 84 },
-      { invoiceIdx: 1, method: 'card', amount: 31.9, ref: 'CARD-001', daysAgo: 54 },
+      {
+        invoiceIdx: 0,
+        method: 'transfer',
+        amount: 108.9,
+        ref: 'TRF-001',
+        daysAgo: 84,
+      },
+      {
+        invoiceIdx: 1,
+        method: 'card',
+        amount: 31.9,
+        ref: 'CARD-001',
+        daysAgo: 54,
+      },
       { invoiceIdx: 4, method: 'cash', amount: 108.9, ref: null, daysAgo: 54 },
     ];
 

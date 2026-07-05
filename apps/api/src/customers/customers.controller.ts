@@ -17,7 +17,10 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
-import { CreateCustomerDto, UpdateCustomerDto } from './dto/create-customer.dto';
+import {
+  CreateCustomerDto,
+  UpdateCustomerDto,
+} from './dto/create-customer.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import type { JwtPayload } from '../auth/decorators/current-user.decorator';
@@ -51,19 +54,13 @@ export class CustomersController {
   @Get(':id')
   @ApiOperation({ summary: 'Get customer by ID' })
   @ApiParam({ name: 'id', type: 'string' })
-  findOne(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  findOne(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.customersService.findOne(user.organizationId, id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new customer' })
-  create(
-    @CurrentUser() user: JwtPayload,
-    @Body() dto: CreateCustomerDto,
-  ) {
+  create(@CurrentUser() user: JwtPayload, @Body() dto: CreateCustomerDto) {
     return this.customersService.create(user.organizationId, dto);
   }
 
@@ -81,10 +78,7 @@ export class CustomersController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a customer' })
   @ApiParam({ name: 'id', type: 'string' })
-  remove(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ) {
+  remove(@CurrentUser() user: JwtPayload, @Param('id') id: string) {
     return this.customersService.remove(user.organizationId, id);
   }
 }

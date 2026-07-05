@@ -46,8 +46,7 @@ export class DashboardService {
       where: { organizationId, status: 'cancelled' },
     });
 
-    const churnRate =
-      totalSubs > 0 ? (cancelledSubs / totalSubs) * 100 : 0;
+    const churnRate = totalSubs > 0 ? (cancelledSubs / totalSubs) * 100 : 0;
 
     return {
       mrr: Math.round(mrr * 100) / 100,
@@ -82,7 +81,10 @@ export class DashboardService {
         .getRawOne();
 
       const revenue = parseFloat(result?.revenue || '0');
-      months.push({ month: monthStr, revenue: Math.round(revenue * 100) / 100 });
+      months.push({
+        month: monthStr,
+        revenue: Math.round(revenue * 100) / 100,
+      });
     }
 
     return months;

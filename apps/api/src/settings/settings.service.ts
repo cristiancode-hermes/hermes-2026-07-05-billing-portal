@@ -43,7 +43,8 @@ export class SettingsService {
     }
 
     if (dto.currency !== undefined) settings.currency = dto.currency;
-    if (dto.defaultTaxRate !== undefined) settings.defaultTaxRate = dto.defaultTaxRate;
+    if (dto.defaultTaxRate !== undefined)
+      settings.defaultTaxRate = dto.defaultTaxRate;
 
     await this.settingsRepository.save(settings);
 

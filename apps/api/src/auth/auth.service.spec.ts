@@ -1,10 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import {
-  ConflictException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { AuthService } from './auth.service';
 import { Organization } from '../entities/organization.entity';
@@ -229,10 +226,7 @@ describe('AuthService', () => {
       expect(mockUserRepo.findOne).toHaveBeenCalledWith({
         where: { email: 'admin@acme.com' },
       });
-      expect(bcrypt.compare).toHaveBeenCalledWith(
-        'password123',
-        'stored-hash',
-      );
+      expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'stored-hash');
       expect(mockJwtService.sign).toHaveBeenCalledWith({
         userId: 'user-001',
         organizationId: 'org-001',

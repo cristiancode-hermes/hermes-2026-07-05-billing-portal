@@ -10,10 +10,7 @@ import { InvoiceItem } from '../entities/invoice-item.entity';
 import { Payment } from '../entities/payment.entity';
 import { Customer } from '../entities/customer.entity';
 import { Settings } from '../entities/settings.entity';
-import {
-  CreateInvoiceDto,
-  PayInvoiceDto,
-} from './dto/create-invoice.dto';
+import { CreateInvoiceDto, PayInvoiceDto } from './dto/create-invoice.dto';
 
 @Injectable()
 export class InvoicesService {
@@ -73,7 +70,9 @@ export class InvoicesService {
     const today = new Date();
     const invoiceNumber = `INV-${today.getTime()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     const issueDate = dto.issueDate || today.toISOString().split('T')[0];
-    const dueDate = dto.dueDate || new Date(today.getTime() + 30 * 86400000).toISOString().split('T')[0];
+    const dueDate =
+      dto.dueDate ||
+      new Date(today.getTime() + 30 * 86400000).toISOString().split('T')[0];
 
     const invoice = this.invoiceRepository.create({
       organizationId,
@@ -124,7 +123,8 @@ export class InvoicesService {
       throw new BadRequestException('Cannot pay a cancelled invoice');
     }
 
-    const paymentDate = dto.paymentDate || new Date().toISOString().split('T')[0];
+    const paymentDate =
+      dto.paymentDate || new Date().toISOString().split('T')[0];
 
     const payment = this.paymentRepository.create({
       invoiceId: id,

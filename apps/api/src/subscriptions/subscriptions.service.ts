@@ -11,7 +11,10 @@ import { Customer } from '../entities/customer.entity';
 import { Invoice } from '../entities/invoice.entity';
 import { InvoiceItem } from '../entities/invoice-item.entity';
 import { Settings } from '../entities/settings.entity';
-import { CreateSubscriptionDto, ChangePlanDto } from './dto/create-subscription.dto';
+import {
+  CreateSubscriptionDto,
+  ChangePlanDto,
+} from './dto/create-subscription.dto';
 
 @Injectable()
 export class SubscriptionsService {
@@ -83,7 +86,12 @@ export class SubscriptionsService {
     const savedSub = await this.subscriptionRepository.save(sub);
 
     // Generate first invoice (draft)
-    await this.generateInvoice(organizationId, dto.customerId, savedSub.id, plan);
+    await this.generateInvoice(
+      organizationId,
+      dto.customerId,
+      savedSub.id,
+      plan,
+    );
 
     return this.subscriptionRepository.findOne({
       where: { id: savedSub.id },
@@ -135,7 +143,9 @@ export class SubscriptionsService {
   async changePlan(organizationId: string, id: string, dto: ChangePlanDto) {
     const sub = await this.findOne(organizationId, id);
     if (sub.status !== 'active') {
-      throw new BadRequestException('Cannot change plan on a cancelled subscription');
+      throw new BadRequestException(
+        'Cannot change plan on a cancelled subscription',
+      );
     }
 
     const currentPlan = await this.planRepository.findOne({
@@ -149,7 +159,9 @@ export class SubscriptionsService {
     if (!newPlan) throw new NotFoundException('New plan not found');
 
     if (currentPlan.id === newPlan.id) {
-      throw new BadRequestException('New plan must be different from current plan');
+      throw new BadRequestException(
+        'New plan must be different from current plan',
+      );
     }
 
     // Proration logic

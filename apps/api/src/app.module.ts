@@ -44,7 +44,10 @@ import { SeedModule } from './seed/seed.module';
     SeedModule,
   ],
   providers: [
-    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true, transform: true }) },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({ whitelist: true, transform: true }),
+    },
   ],
 })
 export class AppModule {}

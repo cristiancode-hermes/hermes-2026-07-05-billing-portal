@@ -9,11 +9,13 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors();
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    transform: true,
-    forbidNonWhitelisted: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Billing Portal API')

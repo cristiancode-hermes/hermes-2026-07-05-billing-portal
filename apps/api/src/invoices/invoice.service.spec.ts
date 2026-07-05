@@ -1,9 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import {
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { Invoice } from '../entities/invoice.entity';
 import { InvoiceItem } from '../entities/invoice-item.entity';
@@ -69,7 +66,7 @@ describe('InvoicesService', () => {
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
     customer: null as any,
-    subscription: null as any,
+    subscription: null,
     organization: null as any,
     items: [],
   };
@@ -265,9 +262,9 @@ describe('InvoicesService', () => {
       const draftInvoice = { ...baseInvoice, status: 'draft' };
       mockInvoiceRepo.findOne.mockResolvedValueOnce(draftInvoice);
 
-      await expect(
-        service.markOverdue(orgId, invoiceId),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.markOverdue(orgId, invoiceId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

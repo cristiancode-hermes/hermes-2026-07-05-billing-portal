@@ -8,12 +8,20 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { Organization } from '../entities/organization.entity';
 import { User } from '../entities/user.entity';
 import { Settings } from '../entities/settings.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Organization, User, Settings]),
     PassportModule,
-    JwtModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET', 'dev-secret'),
+        signOptions: { expiresIn: '7d' },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

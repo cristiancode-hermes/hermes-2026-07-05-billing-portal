@@ -1,24 +1,34 @@
 import { ApplicationConfig, provideZonelessChangeDetection, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { provideRouter, Routes } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './services/auth.interceptor';
 
+/** Guard that blocks unauthenticated users and redirects them to /login. */
+const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  if (!auth.isAuthenticated()) return inject(Router).parseUrl('/login');
+  return true;
+};
+
+/** Guard that redirects already-authenticated users away from the login page to /dashboard. */
+const loginGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  if (auth.isAuthenticated()) return inject(Router).parseUrl('/dashboard');
+  return true;
+};
+
 export const routes: Routes = [
   // Auth routes (no sidebar)
-  { path: 'login', loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage) },
+  { path: 'login', canActivate: [loginGuard], loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage) },
   { path: 'register', loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage) },
 
   // Main app routes (with sidebar — MainLayout)
   {
     path: '',
     loadComponent: () => import('./layouts/main-layout/main-layout.component').then(m => m.MainLayout),
-    canActivate: [() => {
-      const auth = inject(AuthService);
-      if (!auth.isAuthenticated()) return inject(Router).navigate(['/login']);
-      return true;
-    }],
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.page').then(m => m.DashboardPage) },
       { path: 'plans', loadComponent: () => import('./pages/plans/plans.page').then(m => m.PlansPage) },

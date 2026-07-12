@@ -1,6 +1,6 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError, throwError } from 'rxjs';
+import { tap } from 'rxjs';
 import { User } from '../models/user.model';
 
 const apiUrl = '/api';
@@ -12,14 +12,19 @@ export class AuthService {
   private readonly userSignal = signal<User | null>(null);
 
   readonly user = this.userSignal.asReadonly();
-  readonly isAuthenticated = computed(() => !!this.userSignal() || !!this.getToken());
+  isAuthenticated(): boolean {
+    return !!this.userSignal() || !!this.getToken();
+  }
 
   constructor() {
     const token = this.getToken();
     if (token) {
       this.me().subscribe({
         next: (user) => this.userSignal.set(user),
-        error: () => this.logout(),
+        // Don't call logout() on transient me() failure — the token may still be
+        // valid and the capturer or app flow depends on it being present.
+        // Just leave userSignal null; isAuthenticated() still returns true via getToken().
+        error: () => {},
       });
     }
   }

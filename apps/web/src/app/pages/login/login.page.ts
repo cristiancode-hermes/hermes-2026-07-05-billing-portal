@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, afterNextRender } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -85,6 +85,16 @@ export class LoginPage {
   protected readonly password = signal('');
   protected readonly loading = signal(false);
   protected readonly error = signal('');
+
+  constructor() {
+    // Defensive: if the user is already authenticated when the login page loads
+    // (e.g., capturer injected a token before navigation), redirect immediately.
+    afterNextRender(() => {
+      if (this.authService.isAuthenticated()) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
 
   protected onSubmit() {
     if (!this.email() || !this.password()) return;

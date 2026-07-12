@@ -12,6 +12,27 @@ import type { JwtPayload } from '../auth/decorators/current-user.decorator';
 export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'Get all dashboard data aggregated' })
+  async getAll(@CurrentUser() user: JwtPayload) {
+    const [kpis, revenueByMonth, subscriptionSummary, overdueInvoices] =
+      await Promise.all([
+        this.dashboardService.getKpis(user.organizationId),
+        this.dashboardService.getRevenueChart(user.organizationId),
+        this.dashboardService.getSubscriptionSummary(user.organizationId),
+        this.dashboardService.getOverdueInvoices(user.organizationId),
+      ]);
+    return {
+      mrr: kpis.mrr,
+      activeSubscriptions: kpis.totalActiveSubscriptions,
+      totalRevenue: kpis.totalRevenue,
+      churnRate: kpis.churnRate,
+      revenueByMonth,
+      subscriptionSummary,
+      overdueInvoices,
+    };
+  }
+
   @Get('kpis')
   @ApiOperation({ summary: 'Get KPI data (MRR, active subs, revenue, churn)' })
   getKpis(@CurrentUser() user: JwtPayload) {
